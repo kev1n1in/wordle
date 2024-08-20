@@ -1,16 +1,27 @@
-import { useReducer, useEffect, useRef } from "react";
+import { useReducer, useEffect, useRef, useState } from "react";
 import Row from "./Row";
 import { initialState, reducer } from "../utils/gameReducer";
-
-const solution = "APPLE";
+import { fetchSolution } from "../services/firebaseService";
 
 const Board = () => {
+  const [solution, setSolution] = useState("");
   const [state, dispatch] = useReducer(reducer, initialState);
   const nextLetterRef = useRef(state.nextLetter);
 
   useEffect(() => {
     nextLetterRef.current = state.nextLetter;
   }, [state.nextLetter]);
+
+  useEffect(() => {
+    async function getSolution() {
+      const solutionFromDb = await fetchSolution();
+      if (solutionFromDb) {
+        setSolution(solutionFromDb);
+      }
+    }
+
+    getSolution();
+  }, []);
 
   useEffect(() => {
     const handleKeyUp = (event) => {
@@ -40,7 +51,7 @@ const Board = () => {
     return () => {
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, []);
+  }, [solution]);
 
   return (
     <div className="flex justify-center">

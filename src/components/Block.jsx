@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-const Block = ({ letter, status, className }) => {
+const Block = ({ letter, status }) => {
   const statusClasses = {
     correct: "bg-green-500 text-white",
     present: "bg-yellow-500 text-white",
@@ -10,7 +10,7 @@ const Block = ({ letter, status, className }) => {
 
   return (
     <div
-      className={`${className} ${
+      className={` ${
         statusClasses[status || "default"]
       } flex justify-center items-center border-2 border-gray-300 w-12 h-12`}
     >
@@ -22,7 +22,6 @@ const Block = ({ letter, status, className }) => {
 Block.propTypes = {
   letter: PropTypes.string,
   status: PropTypes.oneOf(["correct", "present", "absent", "default"]),
-  className: PropTypes.string,
 };
 
 export default Block;
