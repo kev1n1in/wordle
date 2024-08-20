@@ -1,10 +1,9 @@
-import { useReducer, useEffect, useRef, useState } from "react";
+import { useReducer, useEffect, useRef } from "react";
 import Row from "./Row";
 import { initialState, reducer } from "../utils/gameReducer";
 import { fetchSolution } from "../services/firebaseService";
 
 const Board = () => {
-  const [solution, setSolution] = useState("");
   const [state, dispatch] = useReducer(reducer, initialState);
   const nextLetterRef = useRef(state.nextLetter);
 
@@ -16,7 +15,7 @@ const Board = () => {
     async function getSolution() {
       const solutionFromDb = await fetchSolution();
       if (solutionFromDb) {
-        setSolution(solutionFromDb);
+        dispatch({ type: "SET_SOLUTION", solution: solutionFromDb });
       }
     }
 
@@ -35,7 +34,7 @@ const Board = () => {
           break;
 
         case key === "Enter" && nextLetterRef.current === 5:
-          dispatch({ type: "SUBMIT_GUESS", solution });
+          dispatch({ type: "SUBMIT_GUESS" });
           break;
 
         case key === "Backspace" && nextLetterRef.current > 0:
@@ -51,7 +50,7 @@ const Board = () => {
     return () => {
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [solution]);
+  }, []);
 
   return (
     <div className="flex justify-center">
