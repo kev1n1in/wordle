@@ -1,63 +1,88 @@
+function createRow(rows, cols, fillValue) {
+  return Array.from({ length: rows }, () => Array(cols).fill(fillValue));
+}
+
 export const initialState = {
-  guesses: Array.from({ length: 6 }, () => Array(5).fill("")),
-  statuses: Array.from({ length: 6 }, () => Array(5).fill("default")),
+  guesses: createRow(6, 5, ""),
+  statuses: createRow(6, 5, "default"),
   currentRow: 0,
   nextLetter: 0,
+  message: "",
 };
 
-
-
 export function reducer(state, action) {
+  switch (action.type) {
+    case "INSERT_LETTER":
+      if (state.nextLetter < 5) {
+        const newGuesses = [...state.guesses];
+        newGuesses[state.currentRow][state.nextLetter] = action.letter;
+        return {
+          ...state,
+          guesses: newGuesses,
+          nextLetter: state.nextLetter + 1,
+          message: "",
+        };
+      }
+      return state;
 
+    case "DELETE_LETTER":
+      if (state.nextLetter > 0) {
+        const newGuesses = [...state.guesses];
+        newGuesses[state.currentRow][state.nextLetter - 1] = "";
+        return {
+          ...state,
+          guesses: newGuesses,
+          nextLetter: state.nextLetter - 1,
+          message: "",
+        };
+      }
+      return state;
 
-    switch (action.type) {
-      case "INSERT_LETTER":
-        if (state.nextLetter < 5) {
-          const newGuesses = [...state.guesses];
-          newGuesses[state.currentRow][state.nextLetter] = action.letter;
-          return {
-            ...state,
-            guesses: newGuesses,
-            nextLetter: state.nextLetter + 1,
-          };
+    case "SUBMIT_GUESS": {
+      const { currentRow, guesses } = state;
+      const newStatuses = [...state.statuses];
+      const currentGuess = guesses[currentRow];
+      const solutionArray = action.solution.split("");
+
+      let isCorrect = true;
+
+      currentGuess.forEach((letter, index) => {
+        if (letter === solutionArray[index]) {
+          newStatuses[currentRow][index] = "correct";
+        } else if (solutionArray.includes(letter)) {
+          newStatuses[currentRow][index] = "present";
+          isCorrect = false;
+        } else {
+          newStatuses[currentRow][index] = "absent";
+          isCorrect = false;
         }
-        return state;
-  
-      case "DELETE_LETTER":
-        if (state.nextLetter > 0) {
-          const newGuesses = [...state.guesses];
-          newGuesses[state.currentRow][state.nextLetter - 1] = "";
-          return {
-            ...state,
-            guesses: newGuesses,
-            nextLetter: state.nextLetter - 1,
-          };
-        }
-        return state;
-  
-      case "SUBMIT_GUESS": {
-        const newStatuses = [...state.statuses];
-        const currentGuess = state.guesses[state.currentRow];
-  
-        currentGuess.forEach((letter, index) => {
-          if (letter === action.solution[index]) {
-            newStatuses[state.currentRow][index] = "correct";
-          } else if (action.solution.includes(letter)) {
-            newStatuses[state.currentRow][index] = "present";
-          } else {
-            newStatuses[state.currentRow][index] = "absent";
-          }
-        });
-  
+      });
+
+      if (isCorrect) {
         return {
           ...state,
           statuses: newStatuses,
-          currentRow: state.currentRow + 1,
-          nextLetter: 0,
+          message: "泥真棒",
         };
       }
-  
-      default:
-        return state;
+
+      if (currentRow === 5) {
+        return {
+          ...initialState,
+          message: "抱歉 你可以再試試看",
+        };
+      }
+
+      return {
+        ...state,
+        statuses: newStatuses,
+        currentRow: currentRow + 1,
+        nextLetter: 0,
+        message: "",
+      };
     }
+
+    default:
+      return state;
   }
+}
