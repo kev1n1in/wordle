@@ -68,9 +68,7 @@ export function reducer(state, action) {
 
       if (currentRow === 5) {
         return {
-          ...initialState,
-          guesses: createRow(6, 5, ""), 
-          statuses: createRow(6, 5, "default"), 
+          ...JSON.parse(JSON.stringify(initialState)),
           message: "抱歉 你可以再試試看",
         };
       }
