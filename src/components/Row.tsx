@@ -7,7 +7,7 @@ interface Props {
   statuses: Status[];
 }
 
-const Row: React.FC<Props> = ({ letters, statuses }) => {
+const Row = ({ letters, statuses }: Props) => {
   return (
     <div className="flex gap-1">
       {letters.map((letter, index) => (
