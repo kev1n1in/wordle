@@ -4,7 +4,7 @@ import { Status } from "../types/StatusType";
 
 interface Props {
   letter: string;
-  status: Status[];
+  status: Status;
 }
 
 const Block = ({ letter, status }: Props) => {
