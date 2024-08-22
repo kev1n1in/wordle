@@ -7,13 +7,6 @@ interface Props {
   statuses: Status[];
 }
 
-const statusMap = {
-  [Status.Correct]: "correct",
-  [Status.Present]: "present",
-  [Status.Absent]: "absent",
-  [Status.Default]: "default",
-};
-
 const Row = ({ letters, statuses }: Props) => {
   return (
     <div className="flex gap-1">
