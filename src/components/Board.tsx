@@ -1,6 +1,6 @@
-import React, { useReducer, useEffect, useRef, KeyboardEvent } from "react";
+import React, { useReducer, useEffect, useRef } from "react";
 import Row from "./Row";
-import { initialState, reducer, State, Action } from "../utils/gameReducer";
+import { initialState, reducer } from "../utils/gameReducer";
 import { fetchSolution } from "../services/firebaseService";
 import { db } from "../services/firebaseConfig";
 import { Firestore } from "firebase/firestore";
@@ -18,11 +18,8 @@ async function getRandomSolution(db: Firestore): Promise<string> {
   }
 }
 
-const Board: React.FC = () => {
-  const [state, dispatch] = useReducer<React.Reducer<State, Action>>(
-    reducer,
-    initialState
-  );
+const Board = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const nextLetterRef = useRef<number>(state.nextLetter);
   const fetchControllerRef = useRef<AbortController | null>(null);
 
@@ -80,12 +77,9 @@ const Board: React.FC = () => {
       }
     };
 
-    window.addEventListener("keyup", handleKeyUp as unknown as EventListener);
+    window.addEventListener("keyup", handleKeyUp);
     return () => {
-      window.removeEventListener(
-        "keyup",
-        handleKeyUp as unknown as EventListener
-      );
+      window.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
 

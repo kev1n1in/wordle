@@ -1,8 +1,8 @@
 export enum Status {
-  Correct = "correct",
-  Present = "present",
-  Absent = "absent",
-  Default = "default",
+  Correct,
+  Present,
+  Absent,
+  Default,
 }
 
-export type Statuses = Status[];
+// export type Statuses = Status[];

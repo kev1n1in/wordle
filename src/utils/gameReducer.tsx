@@ -56,8 +56,10 @@ export const reducer = produce((state: State, action: Action) => {
         return state;
       }
       if (state.currentRow === 5) {
-        state.message = "抱歉 你可以再試試看";
-        return state;
+        return {
+          ...initialState,
+          message: "抱歉 你可以再試試看",
+        };
       }
 
       const currentGuess = state.guesses[state.currentRow];
