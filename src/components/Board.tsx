@@ -30,11 +30,9 @@ const Board: React.FC = () => {
     async function fetchAndSetSolution() {
       const controller = new AbortController();
       fetchControllerRef.current = controller;
-
       try {
         const solutionFromDb = await getRandomSolution(db);
         if (!controller.signal.aborted) {
-          // 確保在未取消請求的情況下設置 solution
           dispatch({ type: "SET_SOLUTION", solution: solutionFromDb });
           console.log("Fetched solution:", solutionFromDb);
         }
@@ -44,18 +42,16 @@ const Board: React.FC = () => {
         }
       }
     }
-
     if (!state.solution) {
       fetchAndSetSolution();
     }
 
     return () => {
       if (fetchControllerRef.current) {
-        fetchControllerRef.current.abort(); // 清理函數中取消異步請求
+        fetchControllerRef.current.abort();
       }
     };
-  }, [state.solution]); // 依賴項是 state.solution
-
+  }, [state.solution]);
   useEffect(() => {
     nextLetterRef.current = state.nextLetter;
   }, [state.nextLetter]);
