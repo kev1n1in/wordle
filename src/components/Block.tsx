@@ -1,13 +1,19 @@
+import React from "react";
 import PropTypes from "prop-types";
+import { Status } from "../types/StatusType";
 
-const Block = ({ letter, status }) => {
+interface Props {
+  letter: string;
+  status: Status[];
+}
+
+const Block = ({ letter, status }: Props) => {
   const statusClasses = {
     correct: "bg-green-500 text-white",
     present: "bg-yellow-500 text-white",
     absent: "bg-gray-500 text-white",
     default: "bg-white text-black",
   };
-
   return (
     <div
       className={` ${
